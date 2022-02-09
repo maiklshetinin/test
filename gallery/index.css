@@ -1,0 +1,22 @@
+body{
+    margin: 0;
+    padding: 1rem;
+}
+.slide{
+    height: 20rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.slide-1{
+    background-color: blue;
+}
+.slide-2{
+    background-color: rgb(255, 0, 0);
+}
+.slide-3{
+    background-color: rgb(255, 0, 255);
+}
+.slide-4{
+    background-color: rgb(255, 208, 0);
+}
