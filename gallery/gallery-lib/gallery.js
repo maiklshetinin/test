@@ -25,7 +25,7 @@ class Gallery {
         this.manageHTML()
         this.setParameters()
         this.setEvents()
-        this.destroyEvents()
+
 
     }
 
