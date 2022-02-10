@@ -14,7 +14,7 @@ class Gallery {
         }
 
         this.manageHTML = this.manageHTML.bind(this)//чтобы при вызове метода не слетали контексты баиндим
-        this.setParameter = this.setParameters.bind(this)
+        this.setParameters = this.setParameters.bind(this)
         this.setEvents = this.setEvents.bind(this)
         this.resizeGallery = this.resizeGallery.bind(this)
         this.startDrag = this.startDrag.bind(this)
@@ -25,8 +25,6 @@ class Gallery {
         this.manageHTML()
         this.setParameters()
         this.setEvents()
-
-
     }
 
     manageHTML() {
@@ -35,8 +33,8 @@ class Gallery {
         <div class="${GalleryLineClassName}">
         ${this.containerNode.innerHTML}
         </div>`
-        this.lineNodes = this.containerNode.querySelector(`.${GalleryLineClassName}`)//для удобной манипуляции
-        this.slideNodes = Array.from(this.lineNodes.children).map((childNode) =>
+        this.lineNode = this.containerNode.querySelector(`.${GalleryLineClassName}`)//для удобной манипуляции
+        this.slideNodes = Array.from(this.lineNode.children).map((childNode) =>
             wrapElementByDiv({
                 element: childNode,
                 className: GallerySlideClassName
@@ -46,10 +44,12 @@ class Gallery {
     setParameters() {
         const coordsContainer = this.containerNode.getBoundingClientRect()
         this.width = coordsContainer.width
-        this.maximumX=-(this.size-1)*this.width
-        this.lineNodes.style.width = `${this.size * (this.width+this.settings.margin)}px`
-        this.x = -this.currentSlide * this.width
-
+        this.maximumX=-(this.size-1)*this.width+this.settings.margin
+        this.x = -this.currentSlide * this.width+this.settings.margin
+        
+        this.resetStyleTransition()
+        this.lineNode.style.width = `${this.size * (this.width+this.settings.margin)}px`    
+        this.setStylePosition()
         Array.from(this.slideNodes).forEach((el) => {
             el.style.width = `${this.width}px`
             el.style.marginRight=`${this.settings.margin}px`
@@ -59,12 +59,16 @@ class Gallery {
     setEvents() {
         this.debouncedResizeGallery = debounce(this.resizeGallery)
         window.addEventListener('resize', this.debouncedResizeGallery)
-        this.lineNodes.addEventListener('pointerdown', this.startDrag)//опускаем указатель (мышка,палец)
+        this.lineNode.addEventListener('pointerdown', this.startDrag)//опускаем указатель (мышка,палец)
         window.addEventListener('pointerup', this.stopDrag)//поднимаем указатель (остановкаа)
+    window.addEventListener('pointercancel',this.startDrag)
     }
 
     destroyEvents() {
         window.removeEventListener('resize', this.debouncedResizeGallery)
+        this.lineNode.removeEventListener('pointerdown', this.startDrag)//опускаем указатель (мышка,палец)
+        window.removeEventListener('pointerup', this.stopDrag)
+        window.removeEventListener('pointercancel',this.startDrag)
     }
 
     resizeGallery() {
@@ -82,7 +86,7 @@ class Gallery {
 
     stopDrag() {
         window.removeEventListener('pointermove', this.dragging)
-      this.x=-this.currentSlide*this.width
+      this.x=-this.currentSlide*this.width+this.settings.margin
       this.setStylePosition()
       this.setStyleTransition()
     }
@@ -118,15 +122,15 @@ class Gallery {
  
 
     setStylePosition() {
-        this.lineNodes.style.transform = `translate3d(${this.x}px,0,0)`
+        this.lineNode.style.transform = `translate3d(${this.x}px,0,0)`
     }
 
     setStyleTransition(){
-        this.lineNodes.style.transition=`all 0.25s ease 0s`
+        this.lineNode.style.transition=`all 0.25s ease 0s`
     }
 
     resetStyleTransition(){
-        this.lineNodes.style.transition=`all 0s ease 0s`
+        this.lineNode.style.transition=`all 0s ease 0s`
     }
     
 }
