@@ -2,11 +2,12 @@
     width: 100%;
     overflow: hidden;
     user-select: none;
+    touch-action: none
 }
 
 .gallery-line {
     overflow: hidden;
-    /* touch-action: none */
+    touch-action: none
 }
 
 .gallery-slide {
