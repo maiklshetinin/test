@@ -1,4 +1,5 @@
 const GalleryClassName = 'gallery'
+const GalleryDraggableClassName='gallery-draggable'
 const GalleryLineClassName = 'gallery-line'
 const GallerySlideClassName = 'gallery-slide'
 
@@ -44,12 +45,12 @@ class Gallery {
     setParameters() {
         const coordsContainer = this.containerNode.getBoundingClientRect()
         this.width = coordsContainer.width
-        this.maximumX=-(this.size-1)*this.width+this.settings.margin
-        this.x = -this.currentSlide * this.width+this.settings.margin
+        this.maximumX=-(this.size-1)*(this.width+this.settings.margin)
+        this.x = -this.currentSlide * (this.width+this.settings.margin)
         
-        this.resetStyleTransition()
+   this.resetStyleTransition()
         this.lineNode.style.width = `${this.size * (this.width+this.settings.margin)}px`    
-        this.setStylePosition()
+   this.setStylePosition
         Array.from(this.slideNodes).forEach((el) => {
             el.style.width = `${this.width}px`
             el.style.marginRight=`${this.settings.margin}px`
@@ -81,12 +82,14 @@ class Gallery {
         this.clickX = event.pageX
         this.startX = this.x
         this.resetStyleTransition()
+        this.containerNode.classList.add(GalleryDraggableClassName)
         window.addEventListener('pointermove', this.dragging)
     }
 
     stopDrag() {
         window.removeEventListener('pointermove', this.dragging)
-      this.x=-this.currentSlide*this.width+this.settings.margin
+      this.x=-this.currentSlide*(this.width+this.settings.margin)
+      this.containerNode.classList.remove(GalleryDraggableClassName)
       this.setStylePosition()
       this.setStyleTransition()
     }

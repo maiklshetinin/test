@@ -4,6 +4,9 @@
     user-select: none;
     touch-action: none
 }
+.gallery-draggable{
+    cursor: grabbing;
+}
 
 .gallery-line {
     overflow: hidden;
