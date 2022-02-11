@@ -1,16 +1,13 @@
 body{
     margin: 0;
     padding: 1rem;
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: aqua;
 }
 .slide{
     height: 20rem;
     display: flex;
     align-items: center;
     justify-content: center;
-   border-radius: 20px;
+    border-radius: 20px;
 }
 .slide-1{
     background-color: blue;
