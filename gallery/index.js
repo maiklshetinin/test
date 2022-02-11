@@ -1,3 +1,1 @@
-new Gallery(document.getElementById('gallery'),{
-    margin:10
-})
+new Gallery(document.getElementById('gallery'))

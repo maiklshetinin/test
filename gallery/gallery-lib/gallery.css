@@ -1,14 +1,33 @@
-.gallery {
+.wrapper{
+    display: flex;
     width: 100%;
     overflow: hidden;
+}
+.wrapper-left{
+width: 10%;
+min-height: 1px;
+/* background-color: #ccc; */
+}
+.wrapper-right{
+width: 10%;
+min-height: 1px;
+/* background-color: #ccc; */
+}
+
+.gallery {
+    width: 80%;
+    /* overflow: hidden; */
     user-select: none;
-    touch-action: none
+    touch-action: none;
+    margin: 0 auto;
 }
 .gallery-draggable{
     cursor: grabbing;
 }
 
 .gallery-line {
+    display: flex;
+    gap: 10px;
     overflow: hidden;
     touch-action: none;
    
@@ -19,7 +38,11 @@ min-height: 1px;
 float: left;
 transform: translateZ(0);
 touch-action: none;
-
+opacity: 0.3;
+transition: all 0.5s ease-in;
+}
+.gallery-nod-active{
+    opacity: 1;
 }
 
 .gallery-dots{
