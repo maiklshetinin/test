@@ -8,19 +8,16 @@ const GalleryDotActiveClassName = 'gallery-dot-active'
 const GalleryNavClassName = 'gallery-nav'
 const GalleryNavLeftClassName = 'gallery-nav-left'
 const GalleryNavRightClassName = 'gallery-nav-right'
+const GalleryActiveSlideNodClassName='gallery-nod-active'
 
 
 class Gallery {
     constructor(element, options = {}) {
         this.containerNode = element//траляля
-        this.size = element.childElementCount//количество чилдов в родителе(size это траляля назначаем сами)
-       
+        this.size = element.childElementCount//количество чилдов в родителе(size это траляля назначаем сами)      
         this.currentSlide = 0//сами назначили свойство currentSlide
         this.currentSlideWasChanged = false
-        this.settings = {
-            margin: options.margin || 0
-        }
-
+//-----------------------------------------------------------------------------------------------------------------bind(this)
         this.manageHTML = this.manageHTML.bind(this)//чтобы при вызове метода не слетали контексты баиндим
         this.setParameters = this.setParameters.bind(this)
         this.setEvents = this.setEvents.bind(this)
@@ -34,11 +31,14 @@ class Gallery {
         this.moveToRight = this.moveToRight.bind(this)
         this.changeCurrentSlide = this.changeCurrentSlide.bind(this)
         this.changeActiveDotClass = this.changeActiveDotClass.bind(this)
+        this.changeActiveSlideNodes=this.changeActiveSlideNodes.bind(this)
 
         this.manageHTML()
         this.setParameters()
         this.setEvents()
     }
+
+    //--------------------------------------------------------------------------------------------------manageHTML()
 
     manageHTML() {
         this.containerNode.classList.add(GalleryClassName)
@@ -52,7 +52,7 @@ class Gallery {
         </div>
         <div class="${GalleryDotsClassName}"></div>
         `
-        this.lineNode = this.containerNode.querySelector(`.${GalleryLineClassName}`)//для удобной манипуляции
+        this.lineNode = this.containerNode.querySelector(`.${GalleryLineClassName}`)
         this.dotsNode = this.containerNode.querySelector(`.${GalleryDotsClassName}`)
 
         this.slideNodes = Array.from(this.lineNode.children).map((childNode) =>
@@ -69,20 +69,24 @@ class Gallery {
         this.navLeft = this.containerNode.querySelector(`.${GalleryNavLeftClassName}`)
         this.navRight = this.containerNode.querySelector(`.${GalleryNavRightClassName}`)
     }
+//------------------------------------------------------------------------------------------------------------setParameters()
+
     setParameters() {
         const coordsContainer = this.containerNode.getBoundingClientRect()
         this.width = coordsContainer.width
-        this.maximumX = -(this.size - 1) * (this.width + this.settings.margin)
-        this.x = -this.currentSlide * (this.width + this.settings.margin)
+        this.maximumX = -(this.size - 1) * (this.width )
+        this.x = -this.currentSlide * (this.width )
 
         this.resetStyleTransition()
-        this.lineNode.style.width = `${this.size * (this.width + this.settings.margin)}px`
-        this.setStylePosition
-        Array.from(this.slideNodes).forEach((el) => {
-            el.style.width = `${this.width}px`
-            el.style.marginRight = `${this.settings.margin}px`
+        this.lineNode.style.width = `${this.size * (this.width )}px`
+        this.slideNodes[0].classList.add(GalleryActiveSlideNodClassName)
+        this.setStylePosition()
+        this.slideNodes.forEach((el) => {
+            el.style.width = `${this.width}px` 
         })
     }
+
+    //--------------------------------------------------------------------------------------------------------setEvents()
 
     setEvents() {
         this.debouncedResizeGallery = debounce(this.resizeGallery)
@@ -96,6 +100,8 @@ class Gallery {
         this.navRight.addEventListener('click', this.moveToRight)
     }
 
+    //----------------------------------------------------------------------------------------------------------destroyEvents()
+
     destroyEvents() {
         window.removeEventListener('resize', this.debouncedResizeGallery)
         this.lineNode.removeEventListener('pointerdown', this.startDrag)//опускаем указатель (мышка,палец)
@@ -107,9 +113,13 @@ class Gallery {
         this.navRight.removeEventListener('click', this.moveToRight)
     }
 
+    //---------------------------------------------------------------------------------------------------------resizeGallery()
+
     resizeGallery() {
         this.setParameters()
     }
+
+    //------------------------------------------------------------------------------------------------------------startDrag()
 
     startDrag(event) {
         this.currentSlideWasChanged = false
@@ -120,12 +130,15 @@ class Gallery {
         window.addEventListener('pointermove', this.dragging)
     }
 
+    //----------------------------------------------------------------------------------------------------------stopDrag()
+
     stopDrag() {
         window.removeEventListener('pointermove', this.dragging)
         this.containerNode.classList.remove(GalleryDraggableClassName)
-
         this.changeCurrentSlide()
     }
+
+    //---------------------------------------------------------------------------------------------------------dragging
 
     dragging(event) {
         this.dragX = event.pageX
@@ -142,6 +155,7 @@ class Gallery {
         ) {
             this.currentSlideWasChanged = true
             this.currentSlide = this.currentSlide - 1
+            
         }
         if (
             dragShift < -20 &&
@@ -150,10 +164,11 @@ class Gallery {
             !this.currentSlideWasChanged
         ) {
             this.currentSlideWasChanged = true
-            this.currentSlide = this.currentSlide + 1
+            this.currentSlide = this.currentSlide + 1          
         }
-
     }
+
+    //-------------------------------------------------------------------------------------------clickDots()
 
     clickDots(event) {
         const dotNode = event.target.closest('button')
@@ -179,6 +194,8 @@ class Gallery {
 
     }
 
+    //--------------------------------------------------------------------------------------------moveToLeft()
+
     moveToLeft() {
         if (this.currentSlide <= 0) {
             return
@@ -186,6 +203,8 @@ class Gallery {
         this.currentSlide = this.currentSlide - 1
         this.changeCurrentSlide()
     }
+
+    //--------------------------------------------------------------------------------------------moveToRight()
 
     moveToRight() {
         if (this.currentSlide >= this.size - 1) {
@@ -195,12 +214,17 @@ class Gallery {
         this.changeCurrentSlide()
     }
 
+    //------------------------------------------------------------------------------------------changeCurrentSlide()
+
     changeCurrentSlide(countSwipes) {
-        this.x = -this.currentSlide * (this.width + this.settings.margin)
+        this.x = -this.currentSlide * (this.width )
         this.setStylePosition()
         this.setStyleTransition(countSwipes)
         this.changeActiveDotClass()
+        this.changeActiveSlideNodes()
     }
+
+    //-------------------------------------------------------------------------------------changeActiveDotClass()
 
     changeActiveDotClass() {
 
@@ -210,20 +234,32 @@ class Gallery {
         this.dotNodes[this.currentSlide].classList.add(GalleryDotActiveClassName)
     }
 
+    //--------------------------------------------------------------------------------------changeActiveSlideNode()
+
+    changeActiveSlideNodes(){
+        for (let i = 0; i < this.slideNodes.length; i++) {
+            this.slideNodes[i].classList.remove(GalleryActiveSlideNodClassName)
+        }
+        this.slideNodes[this.currentSlide].classList.add(GalleryActiveSlideNodClassName)
+    }
+
+    //-----------------------------------------------------------------------------------------setStylePosition()
+
     setStylePosition() {
         this.lineNode.style.transform = `translate3d(${this.x}px,0,0)`
     }
+
+    //-----------------------------------------------------------------------------------------setStyleTransition()
 
     setStyleTransition(countSwipes=1) {
         this.lineNode.style.transition = `all ${countSwipes*0.25}s ease 0s`
     }
 
+    //-----------------------------------------------------------------------------------------resetStyleTransition()
+
     resetStyleTransition() {
         this.lineNode.style.transition = `all 0s ease 0s`
     }
-
-
-
 }
 
 
