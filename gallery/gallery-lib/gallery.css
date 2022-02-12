@@ -1,17 +1,52 @@
-.wrapper{
+.wrapper {
     display: flex;
     width: 100%;
     overflow: hidden;
 }
-.wrapper-left{
-width: 10%;
-min-height: 1px;
-/* background-color: #ccc; */
+
+.wrapper-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    min-height: 1px;
+    z-index: 2;
+    cursor: pointer;
 }
-.wrapper-right{
-width: 10%;
-min-height: 1px;
-/* background-color: #ccc; */
+
+.wrapper-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    min-height: 1px;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.gallery-nav-left{
+    border: none;
+    outline: none;
+    width: 2rem;
+    height: 3rem;
+    top: 50%;
+    cursor: pointer;
+    background: url(../assets/svg/chevron-left.svg) no-repeat center;
+    background-size: contain;
+    left: 0;
+    /* pointer-events: none; */
+}
+.gallery-nav-right{
+    border: none;
+    outline: none;
+    width: 2rem;
+    height: 3rem;
+    top: 50%;
+    cursor: pointer;
+    background: url(../assets/svg/chevron-right.svg) no-repeat center;
+    background-size: contain;
+    left: 0;
+    /* pointer-events: none; */
 }
 
 .gallery {
@@ -21,7 +56,8 @@ min-height: 1px;
     touch-action: none;
     margin: 0 auto;
 }
-.gallery-draggable{
+
+.gallery-draggable {
     cursor: grabbing;
 }
 
@@ -30,27 +66,28 @@ min-height: 1px;
     gap: 10px;
     overflow: hidden;
     touch-action: none;
-   
+
 }
 
 .gallery-slide {
-min-height: 1px;
-float: left;
-transform: translateZ(0);
-touch-action: none;
-opacity: 0.3;
-transition: all 0.5s ease-in;
+    min-height: 1px;
+    float: left;
+    transform: translateZ(0);
+    touch-action: none;
+    opacity: 0.3;
+    transition: all 0.5s ease-in;
 }
-.gallery-nod-active{
+
+.gallery-nod-active {
     opacity: 1;
 }
 
-.gallery-dots{
+.gallery-dots {
     display: flex;
     justify-content: center;
 }
 
-.gallery-dot{
+.gallery-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -64,17 +101,17 @@ transition: all 0.5s ease-in;
 }
 
 .gallery-dot:hover,
-.gallery-dot-active{
-    background:#888;
+.gallery-dot-active {
+    background: #888;
 }
 
-.gallery-nav{
+.gallery-nav {
     display: flex;
     justify-content: center;
     padding: 1rem 0 0;
 }
 
-.gallery-nav button{
+.gallery-nav button {
     margin: 0.5rem;
     cursor: pointer;
 }

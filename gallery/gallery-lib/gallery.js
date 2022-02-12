@@ -1,3 +1,8 @@
+const WrapperClassNamme='wrapper'
+const WrapperLeft='wrapper-left'
+const WrapperRight='wrapper-right'
+
+
 const GalleryClassName = 'gallery'
 const GalleryDraggableClassName = 'gallery-draggable'
 const GalleryLineClassName = 'gallery-line'
@@ -14,9 +19,10 @@ const GalleryActiveSlideNodClassName='gallery-nod-active'
 class Gallery {
     constructor(element, options = {}) {
         this.containerNode = element//траляля
-        this.size = element.childElementCount//количество чилдов в родителе(size это траляля назначаем сами)      
+        this.size = element.childElementCount//количество чилдов в родителе(size это траляля назначаем сами)    
         this.currentSlide = 0//сами назначили свойство currentSlide
         this.currentSlideWasChanged = false
+
 //-----------------------------------------------------------------------------------------------------------------bind(this)
         this.manageHTML = this.manageHTML.bind(this)//чтобы при вызове метода не слетали контексты баиндим
         this.setParameters = this.setParameters.bind(this)
@@ -41,16 +47,18 @@ class Gallery {
     //--------------------------------------------------------------------------------------------------manageHTML()
 
     manageHTML() {
-        this.containerNode.classList.add(GalleryClassName)
+        this.containerNode.classList.add(WrapperClassNamme)
         this.containerNode.innerHTML = `
+        <div class="${WrapperLeft}"><button class="${GalleryNavLeftClassName}"></button></div>
+        <div class="${GalleryClassName}">
         <div class="${GalleryLineClassName}">
         ${this.containerNode.innerHTML}
         </div>
         <div class="${GalleryNavClassName}">
-        <button class="${GalleryNavLeftClassName}">Left</button>
-        <button class="${GalleryNavRightClassName}">Right</button>
         </div>
         <div class="${GalleryDotsClassName}"></div>
+        </div>
+        <div class="${WrapperRight}"><button class="${GalleryNavRightClassName}"></button></div>
         `
         this.lineNode = this.containerNode.querySelector(`.${GalleryLineClassName}`)
         this.dotsNode = this.containerNode.querySelector(`.${GalleryDotsClassName}`)
@@ -67,13 +75,16 @@ class Gallery {
 
         this.dotNodes = this.dotsNode.querySelectorAll(`.${GalleryDotClassName}`)
         this.navLeft = this.containerNode.querySelector(`.${GalleryNavLeftClassName}`)
-        this.navRight = this.containerNode.querySelector(`.${GalleryNavRightClassName}`)
+        this.navRight = this.containerNode.querySelector(`.${GalleryNavRightClassName}`)  
+        this.WrapperRight = this.containerNode.querySelector(`.${WrapperRight}`)
+        this.WrapperLeft = this.containerNode.querySelector(`.${WrapperLeft}`)
+
     }
 //------------------------------------------------------------------------------------------------------------setParameters()
 
     setParameters() {
         const coordsContainer = this.containerNode.getBoundingClientRect()
-        this.width = coordsContainer.width
+        this.width = coordsContainer.width*0.8
         this.maximumX = -(this.size - 1) * (this.width )
         this.x = -this.currentSlide * (this.width )
 
@@ -98,6 +109,11 @@ class Gallery {
         this.dotsNode.addEventListener('click', this.clickDots)
         this.navLeft.addEventListener('click', this.moveToLeft)
         this.navRight.addEventListener('click', this.moveToRight)
+
+        
+        this.WrapperLeft.addEventListener('click', this.moveToLeft)
+        this.WrapperRight.addEventListener('click', this.moveToRight)
+       
     }
 
     //----------------------------------------------------------------------------------------------------------destroyEvents()
@@ -281,3 +297,4 @@ function debounce(func, time = 100) {
         timer = setTimeout(func, time, event)
     }
 }
+
