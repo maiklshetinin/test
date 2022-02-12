@@ -7,9 +7,7 @@ const GalleryClassName = 'gallery'
 const GalleryDraggableClassName = 'gallery-draggable'
 const GalleryLineClassName = 'gallery-line'
 const GallerySlideClassName = 'gallery-slide'
-const GalleryDotsClassName = 'gallery-dots'
-const GalleryDotClassName = 'gallery-dot'
-const GalleryDotActiveClassName = 'gallery-dot-active'
+
 const GalleryNavClassName = 'gallery-nav'
 const GalleryNavLeftClassName = 'gallery-nav-left'
 const GalleryNavRightClassName = 'gallery-nav-right'
@@ -32,11 +30,11 @@ class Gallery {
         this.stopDrag = this.stopDrag.bind(this)
         this.dragging = this.dragging.bind(this)
         this.setStylePosition = this.setStylePosition.bind(this)
-        this.clickDots = this.clickDots.bind(this)
+      
         this.moveToLeft = this.moveToLeft.bind(this)
         this.moveToRight = this.moveToRight.bind(this)
         this.changeCurrentSlide = this.changeCurrentSlide.bind(this)
-        this.changeActiveDotClass = this.changeActiveDotClass.bind(this)
+      
         this.changeActiveSlideNodes=this.changeActiveSlideNodes.bind(this)
 
         this.manageHTML()
@@ -56,12 +54,11 @@ class Gallery {
         </div>
         <div class="${GalleryNavClassName}">
         </div>
-        <div class="${GalleryDotsClassName}"></div>
         </div>
         <div class="${WrapperRight}"><button class="${GalleryNavRightClassName}"></button></div>
         `
         this.lineNode = this.containerNode.querySelector(`.${GalleryLineClassName}`)
-        this.dotsNode = this.containerNode.querySelector(`.${GalleryDotsClassName}`)
+        
 
         this.slideNodes = Array.from(this.lineNode.children).map((childNode) =>
             wrapElementByDiv({
@@ -69,11 +66,9 @@ class Gallery {
                 className: GallerySlideClassName
             })
         )
-        this.dotsNode.innerHTML = Array.from((Array(this.size).keys())).map((key) =>
-            `<button class="${GalleryDotClassName} ${key === this.currentSlide ? GalleryDotActiveClassName : ''}"></button>`
-        ).join('')
+     
 
-        this.dotNodes = this.dotsNode.querySelectorAll(`.${GalleryDotClassName}`)
+       
         this.navLeft = this.containerNode.querySelector(`.${GalleryNavLeftClassName}`)
         this.navRight = this.containerNode.querySelector(`.${GalleryNavRightClassName}`)  
         this.WrapperRight = this.containerNode.querySelector(`.${WrapperRight}`)
@@ -106,7 +101,7 @@ class Gallery {
         window.addEventListener('pointerup', this.stopDrag)//поднимаем указатель (остановкаа)
         window.addEventListener('pointercancel', this.startDrag)
 
-        this.dotsNode.addEventListener('click', this.clickDots)
+    
         this.navLeft.addEventListener('click', this.moveToLeft)
         this.navRight.addEventListener('click', this.moveToRight)
 
@@ -124,7 +119,7 @@ class Gallery {
         window.removeEventListener('pointerup', this.stopDrag)
         window.removeEventListener('pointercancel', this.startDrag)
 
-        this.dotsNode.removeEventListener('click', this.clickDots)
+        
         this.navLeft.removeEventListener('click', this.moveToLeft)
         this.navRight.removeEventListener('click', this.moveToRight)
     }
@@ -186,29 +181,7 @@ class Gallery {
 
     //-------------------------------------------------------------------------------------------clickDots()
 
-    clickDots(event) {
-        const dotNode = event.target.closest('button')
-        if (!dotNode) {
-            return
-        }
-        let dotNumber
-        for (let i = 0; i < this.dotNodes.length; i++) {
-            if (this.dotNodes[i] === dotNode) {
-                dotNumber = i
-                break
-            }
-        }
-
-        if (dotNumber === this.currentSlide) {
-            return
-        }
-        const countSwipes = Math.abs(this.currentSlide - dotNumber)
-
-        this.currentSlide = dotNumber
-        this.changeCurrentSlide(countSwipes)
-
-
-    }
+    
 
     //--------------------------------------------------------------------------------------------moveToLeft()
 
@@ -236,19 +209,13 @@ class Gallery {
         this.x = -this.currentSlide * (this.width )
         this.setStylePosition()
         this.setStyleTransition(countSwipes)
-        this.changeActiveDotClass()
+      
         this.changeActiveSlideNodes()
     }
 
     //-------------------------------------------------------------------------------------changeActiveDotClass()
 
-    changeActiveDotClass() {
-
-        for (let i = 0; i < this.dotNodes.length; i++) {
-            this.dotNodes[i].classList.remove(GalleryDotActiveClassName)
-        }
-        this.dotNodes[this.currentSlide].classList.add(GalleryDotActiveClassName)
-    }
+  
 
     //--------------------------------------------------------------------------------------changeActiveSlideNode()
 
